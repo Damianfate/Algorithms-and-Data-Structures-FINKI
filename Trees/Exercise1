@@ -1,0 +1,69 @@
+import java.util.*;
+
+
+public class zadaca1 {
+
+    static class TreeNode {
+        int id;
+        List<TreeNode> children;
+
+        TreeNode(int id) {
+            this.id = id;
+            this.children = new ArrayList<>();
+        }
+    }
+
+    static Map<Integer, TreeNode> nodes = new HashMap<>();
+
+    static void addChild(int indeksParent, int indeksChild) {
+        TreeNode parent = nodes.get(indeksParent);
+        TreeNode child = new TreeNode(indeksChild);
+        parent.children.add(child);
+        nodes.put(indeksChild, child);
+    }
+
+    static int broiLisja(TreeNode node) {
+        if (node.children.isEmpty()) {
+            return 1;
+        }
+        int brojac = 0;
+
+        for (TreeNode child : node.children) {
+            brojac += broiLisja(child);
+        }
+        return brojac;
+    }
+
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int q = sc.nextInt();
+        sc.nextLine();
+//        SLLTree<Integer> tree = new SLLTree<>();
+        for (int i = 0; i < n + q; i++) {
+            String[] delovi = sc.nextLine().split(" ");
+            String komanda = delovi[0];
+            if (komanda.equals("root")) {
+                int rootIndeks = Integer.parseInt(delovi[1]);
+                TreeNode root = new TreeNode(rootIndeks);
+//                tree.makeRoot(rootIndeks);
+                nodes.put(rootIndeks, root);
+            } else if (komanda.equals("add")) {
+                int parentIndeks = Integer.parseInt(delovi[1]);
+                int childIndeks = Integer.parseInt(delovi[2]);
+                addChild(parentIndeks, childIndeks);
+            } else if (komanda.equals("ask")){
+                int nodeIndeks = Integer.parseInt(delovi[1]);
+                TreeNode node = nodes.get(nodeIndeks);
+                int leafCount = broiLisja(node);
+                System.out.println(leafCount);
+            }
+        }
+    }
+}
+
+
+
+
+
