@@ -1,0 +1,46 @@
+import java.util.*;
+
+public class zadaca3 {
+    public static int broiDeca(BNode<String> node) {
+        int brojac = 0;
+        if (node == null) return 0;
+        if (node.left != null && node.right != null) {
+            brojac++;
+        }
+        return brojac + broiDeca(node.left) + broiDeca(node.right);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int q = sc.nextInt();
+        sc.nextLine();
+        BTree<String> btree = new BTree<>();
+        Map<String, BNode<String>> hash = new HashMap<>();
+        for (int i = 0; i < n + q; i++) {
+            String line = sc.nextLine();
+            String[] delovi = line.split(" ");
+            if (delovi[0].equals("root")) {
+                String rootName = delovi[1];
+                btree.makeRoot(rootName);
+                hash.put(rootName, btree.root);
+            } else if (delovi[0].equals("add")) {
+                String parentName = delovi[1];
+                String childName = delovi[2];
+                String side = delovi[3];
+                BNode<String> parentNode = hash.get(parentName);
+                int strana;
+                if (side.equals("LEFT")) {
+                    strana = BNode.LEFT;
+                } else {
+                    strana = BNode.RIGHT;
+                }
+                hash.put(childName, btree.addChild(parentNode, strana, childName));
+            } else if (delovi[0].equals("ask")) {
+                String nodeName = delovi[1];
+                BNode<String> node = hash.get(nodeName);
+                System.out.println(broiDeca(node));
+            }
+        }
+    }
+}
